@@ -18,7 +18,7 @@ def load_model():
 @st.cache_data
 def preprocess_image(_image):
     """Preprocess the input image for the ESRGAN model."""
-    image = np.array(image)
+    image = np.array(_image)
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     height, width = image_rgb.shape[:2]
     resized_height, resized_width = (height // 4) * 4, (width // 4) * 4
