@@ -16,7 +16,7 @@ def load_model():
     return hub.load(esrgn_path)
 
 @st.cache_data
-def preprocess_image(image):
+def preprocess_image(_image):
     """Preprocess the input image for the ESRGAN model."""
     image = np.array(image)
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
