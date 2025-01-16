@@ -12,13 +12,12 @@ esrgn_path = "https://tfhub.dev/captain-pool/esrgan-tf2/1"
 
 @st.cache_resource
 def load_model():
-    """Load the ESRGAN model from TensorFlow Hub."""
+    """Load the ESRGAN model from TensorFlow Hub (This will be cached)."""
     return hub.load(esrgn_path)
 
-@st.cache_data
-def preprocess_image(_image):
+def preprocess_image(image):
     """Preprocess the input image for the ESRGAN model."""
-    image = np.array(_image)
+    image = np.array(image)
     image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     height, width = image_rgb.shape[:2]
     resized_height, resized_width = (height // 4) * 4, (width // 4) * 4
@@ -26,7 +25,6 @@ def preprocess_image(_image):
     preprocessed_image = cropped_image.astype(np.float32)
     return tf.expand_dims(preprocessed_image, 0)
 
-@st.cache_data
 def run_sr_model(model, image):
     """Run the super-resolution model on the input image."""
     return tf.squeeze(model(image)) / 255.0
@@ -44,14 +42,14 @@ def main():
         image = Image.open(uploaded_file)
         st.image(image, caption="Original Image", use_column_width=True)
         
-        # Preprocess image
+        # Preprocess image (without caching)
         st.write("Processing the image...")
-        model = load_model()
-        preprocessed_image = preprocess_image(image)
-        
+        model = load_model()  # Load model (this is cached)
+        preprocessed_image = preprocess_image(image)  # Do not cache this
+
         # Run the super-resolution model
         with st.spinner("Enhancing the image..."):
-            hr_image = run_sr_model(model, preprocessed_image)
+            hr_image = run_sr_model(model, preprocessed_image)  # Do not cache this
 
         # Display enhanced image
         hr_image = np.clip(hr_image.numpy() * 255, 0, 255).astype(np.uint8)
