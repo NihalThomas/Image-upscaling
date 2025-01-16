@@ -1,6 +1,3 @@
-# Install necessary libraries
-!pip install streamlit tensorflow tensorflow-hub opencv-python matplotlib tqdm --quiet
-
 # Import required libraries
 import streamlit as st
 import tensorflow as tf
